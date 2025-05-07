@@ -1,7 +1,7 @@
-name: flutter_gl
+name: openworld_gl
 description: cross-platform call OpenGL API by Dart through dart:ffi. 3D programming in the cross-platform.  Provides OpenGL with Texture Widget on Flutter. 
-version: 0.0.21
-homepage: https://github.com/wasabia/flutter_gl
+version: 0.0.26
+homepage: https://github.com/forthtemple/openworld_gl
 
 environment:
   sdk: ">=2.17.1 <3.0.0"
@@ -10,16 +10,27 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_gl_platform_interface: ^0.0.4
-  flutter_gl_web: ^0.0.5
-  flutter_gl_macos: ^0.0.4
-  flutter_gl_windows: ^0.0.3
+  flutter_web_plugins:
+    sdk: flutter
+  #flutter_gl_platform_interface: ^0.0.4
+  #flutter_gl_web: ^0.0.5
+  #flutter_gl_macos: ^0.0.4
+  #flutter_gl_windows: ^0.0.3
+  #flutter_gl_linux: ^0.9.0
   ffi: ^2.0.1
+  openworld_gl_platform_interface:
+    path: ../openworld_gl_platform_interface
+  openworld_gl_macos:
+    path: ../openworld_gl_macos
+dependency_overrides:
+  #flutter_gl_linux:
+  #  path: ../flutter_gl_linux
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  plugin_platform_interface: ^2.1.2
+  #plugin_platform_interface: ^2.1.2
+  plugin_platform_interface: ^2.1.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -34,15 +45,26 @@ flutter:
     platforms:
       android:
         package: com.futouapp.flutter_gl.flutter_gl
-        pluginClass: FlutterGlPlugin
+        pluginClass: OpenworldGlPlugin
       ios:
-        pluginClass: FlutterGlPlugin
-      macos:
-        default_package: flutter_gl_macos
-      web:
-        default_package: flutter_gl_web
+        pluginClass: OpenworldGlPlugin
+      linux:
+        pluginClass: OpenworldGlPlugin
+      #macos:
+      #  pluginClass: OpenworldGlPlugin
       windows:
-        default_package: flutter_gl_windows
+        pluginClass: OpenworldGlPlugin
+      macos:
+        default_package: openworld_gl_macos
+      web:
+        pluginClass: OpenworldGlPlugin
+        fileName: openworld_gl_web.dart
+      #web:
+      #  default_package: flutter_gl_web
+      #windows:
+      #  default_package: flutter_gl_windows
+      #linux:
+      #  default_package: flutter_gl_linux
 
 
   # To add assets to your plugin package, add an assets section, like this:

@@ -145,8 +145,10 @@ public class CustomRender: NSObject, FlutterTexture {
       print("failed to make complete framebuffer object \(glCheckFramebufferStatus(GLenum(GL_FRAMEBUFFER)))");
     }
     
-    
-    
+
+    // GL helped in simulator if(texture == nil) {
+    //      return;
+    //  }
     glBindTexture(CVOpenGLESTextureGetTarget(texture!), CVOpenGLESTextureGetName(texture!));
       
     checkGlError(op: "EglEnv initGL 2...")

@@ -1,4 +1,4 @@
-name: flutter_gl_example
+name: openworld_gl_example
 description: Demonstrates how to use the flutter_gl plugin.
 
 # The following line prevents the package from being accidentally published to
@@ -12,13 +12,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_gl:
-    path: ../
   cupertino_icons: ^1.0.4
   path: ^1.8.0
   path_provider: ^2.0.9
   ffi: ^2.0.1
 
+dependency_overrides:
+  openworld_gl:
+    path: ../
+    
 dev_dependencies:
   flutter_test:
     sdk: flutter
