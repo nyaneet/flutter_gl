@@ -4,21 +4,21 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'method_channel_flutter_gl.dart';
 
-abstract class FlutterGlPlatform extends PlatformInterface {
-  /// Constructs a FlutterGlPlatform.
-  FlutterGlPlatform() : super(token: _token);
+abstract class OpenworldGlPlatform extends PlatformInterface {
+  /// Constructs a OpenworldGlPlatform.
+  OpenworldGlPlatform() : super(token: _token);
   static final Object _token = Object();
 
-  static FlutterGlPlatform _instance = MethodChannelFlutterGl();
+  static OpenworldGlPlatform _instance = MethodChannelOpenworldGl();
 
-  /// The default instance of [FlutterGlPlatform] to use.
+  /// The default instance of [OpenworldGlPlatform] to use.
   ///
   /// Defaults to [MethodChannelUrlLauncher].
-  static FlutterGlPlatform get instance => _instance;
+  static OpenworldGlPlatform get instance => _instance;
 
   /// Platform-specific plugins should set this with their own platform-specific
-  /// class that extends [FlutterGlPlatform] when they register themselves.
-  static set instance(FlutterGlPlatform instance) {
+  /// class that extends [OpenworldGlPlatform] when they register themselves.
+  static set instance(OpenworldGlPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }

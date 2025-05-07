@@ -9,14 +9,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gl/flutter_gl.dart';
+import 'package:openworld_gl/openworld_gl.dart';
 
 class ExampleDemoTest extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<ExampleDemoTest> {
-  late FlutterGlPlugin flutterGlPlugin;
+  late OpenworldGlPlugin flutterGlPlugin;
 
   int? fboId;
   num dpr = 1.0;
@@ -46,7 +46,7 @@ class _MyAppState extends State<ExampleDemoTest> {
     width = screenSize!.width;
     height = width;
 
-    flutterGlPlugin = FlutterGlPlugin();
+    flutterGlPlugin = OpenworldGlPlugin();
 
     Map<String, dynamic> _options = {
       "antialias": true,

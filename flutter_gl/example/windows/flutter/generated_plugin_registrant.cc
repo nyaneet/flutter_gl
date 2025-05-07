@@ -6,9 +6,9 @@
 
 #include "generated_plugin_registrant.h"
 
-#include <flutter_gl_windows/flutter_gl_windows_plugin.h>
+#include <openworld_gl/openworld_gl_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
-  FlutterGlWindowsPluginRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("FlutterGlWindowsPlugin"));
+  OpenworldGlPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("OpenworldGlPlugin"));
 }

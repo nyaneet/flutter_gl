@@ -1,12 +1,10 @@
-# Flutter GL
+# OPENWORLD GL
+
+This is the <a href='https://github.com/wasabia/flutter_gl'>flutter_gl</a> package updated to work with the latest version of gradle.  It is used to work with the https://github.com/forthtemple/openworlddart/ package. This version also includes Linux compatibility
 
 cross-platform call OpenGL API by Dart through dart:ffi. Provides OpenGL with Texture Widget on Flutter. 
 
-Support iOS, Android, Web, macOS, Windows
-
-Linux TODO
-
-Used by [three_dart](https://github.com/wasabia/three_dart)
+Support iOS, Android, Web, macOS, Windows, Linux
 
 
 ## OpenGL API
@@ -19,7 +17,7 @@ only support draw to FBO. then share the FBO texture to Native side.
 ### import
 
 ```
-import 'package:flutter_gl/flutter_gl.dart';
+import 'package:openworld_gl/openworld_gl.dart';
 ```
 
 ### Usage
@@ -29,7 +27,7 @@ int width = 200;
 int height = 200;
 num dpr = 1.0;
 
-flutterGlPlugin = FlutterGlPlugin();
+flutterGlPlugin = OpenworldGlPlugin();
 
 Map<String, dynamic> _options = {
     "width": width, 
@@ -64,12 +62,12 @@ Dart List convert to ffi pointer need memeory copy.
 Clone or download this repo
 
 ```
-cd flutter_gl/flutter_gl/example
+cd openworld_gl/openworld_gl/example
 
 flutter run
 ```
 
-## share opengl context with flutter_gl
+## share opengl context with openworld_gl
 
 ### Android
 

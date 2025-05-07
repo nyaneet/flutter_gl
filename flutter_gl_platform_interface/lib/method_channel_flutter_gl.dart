@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'flutter_gl_platform_interface.dart';
 
-const MethodChannel _channel = MethodChannel('flutter_gl');
+const MethodChannel _channel = MethodChannel('openworld_gl');
 
-/// An implementation of [FlutterGlPlatform] that uses method channels.
-class MethodChannelFlutterGl extends FlutterGlPlatform {
+/// An implementation of [OpenworldGlPlatform] that uses method channels.
+class MethodChannelOpenworldGl extends OpenworldGlPlatform {
   bool get isInitialized => this.textureId != null;
 
   Future<Map<String, dynamic>> initialize_interface(
@@ -22,15 +22,19 @@ class MethodChannelFlutterGl extends FlutterGlPlatform {
 
   Future<List<int>> getEgl_interface(int textureId) async {
     final _args = {"textureId": textureId};
-
+   // print("getEgl_interface in");
     final _result = await _channel.invokeMethod('getEgl', _args);
+   // print("getEgl_interface out"+_result.toString());
 
     return List<int>.from(_result);
   }
 
   Future updateTexture_interface(int textureId, sourceTexture) async {
+   // print("method channel updatetexture");
     final _args = {"textureId": textureId, "sourceTexture": sourceTexture};
+   // print("method channel updatetextureii"+_args.toString());
     final _result = await _channel.invokeMethod('updateTexture', _args);
+    //print("method channel updatetextureiii"+_result.toString());
     return _result;
   }
 
