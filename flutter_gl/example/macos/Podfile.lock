@@ -1,35 +1,36 @@
 PODS:
+  - FlutterMacOS (1.0.0)
   - flutter_gl_macos (0.0.1):
     - FlutterMacOS
     - three3d_egl_osx (~> 0.1.1)
-  - FlutterMacOS (1.0.0)
-  - path_provider_macos (0.0.1):
+  - path_provider_foundation (0.0.1):
+    - Flutter
     - FlutterMacOS
   - three3d_egl_osx (0.1.1)
 
 DEPENDENCIES:
-  - flutter_gl_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_gl_macos/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
-  - path_provider_macos (from `Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos`)
+  - flutter_gl_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_gl_macos/macos`)
+  - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
 
 SPEC REPOS:
   trunk:
     - three3d_egl_osx
 
 EXTERNAL SOURCES:
-  flutter_gl_macos:
-    :path: Flutter/ephemeral/.symlinks/plugins/flutter_gl_macos/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
-  path_provider_macos:
-    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos
+  flutter_gl_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_gl_macos/macos
+  path_provider_foundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
 
 SPEC CHECKSUMS:
-  flutter_gl_macos: fd42c918a2cfe97e202cc51f2347a15644b763e5
-  FlutterMacOS: 57701585bf7de1b3fc2bb61f6378d73bbdea8424
-  path_provider_macos: 3c0c3b4b0d4a76d2bf989a913c2de869c5641a19
+  FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
+  flutter_gl_macos: 593be45e1b7f3b31d540b8d02d5297017dc2323c
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   three3d_egl_osx: 5f0b1c41e6d687ac778b3d9900afd569c7f36424
 
-PODFILE CHECKSUM: 0d3963a09fc94f580682bd88480486da345dc3f0
+PODFILE CHECKSUM: 236401fc2c932af29a9fcf0e97baeeb2d750d367
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.15.2

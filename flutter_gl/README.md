@@ -1,12 +1,10 @@
-# Flutter GL
+# FLUTTER GL
+
+This is the <a href='https://github.com/nyaneet/flutter_gl'>flutter_gl</a> package updated to work with the latest version of gradle. This version also includes Linux compatibility
 
 cross-platform call OpenGL API by Dart through dart:ffi. Provides OpenGL with Texture Widget on Flutter. 
 
-Support iOS, Android, Web, macOS, Windows
-
-Linux TODO
-
-Used by [three_dart](https://github.com/wasabia/three_dart)
+Support iOS, Android, Web, macOS, Windows, Linux
 
 
 ## OpenGL API

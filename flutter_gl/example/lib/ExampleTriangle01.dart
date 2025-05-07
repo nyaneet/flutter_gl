@@ -45,8 +45,14 @@ class _MyAppState extends State<ExampleTriangle01> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    width = screenSize!.width;
-    height = width;
+    if (screenSize!.width<screenSize!.height) {
+      width = screenSize!.width;
+      height = width;
+    } else {
+      height = screenSize!.height;
+      width = height;
+
+    }
 
     flutterGlPlugin = FlutterGlPlugin();
 
@@ -159,14 +165,16 @@ class _MyAppState extends State<ExampleTriangle01> {
   }
 
   setupDefaultFBO() {
+    print("main setupdefaultfbo");
     final _gl = flutterGlPlugin.gl;
     int glWidth = (width * dpr).toInt();
-    int glHeight = (height * dpr).toInt();
+    int glHeight =  (height * dpr).toInt();
 
     print("glWidth: ${glWidth} glHeight: ${glHeight} ");
 
     defaultFramebuffer = _gl.createFramebuffer();
     defaultFramebufferTexture = _gl.createTexture();
+    print("main created default frame buffer"+ defaultFramebufferTexture.toString());
     _gl.activeTexture(_gl.TEXTURE0);
 
     _gl.bindTexture(_gl.TEXTURE_2D, defaultFramebufferTexture);
@@ -186,6 +194,7 @@ class _MyAppState extends State<ExampleTriangle01> {
   }
 
   render() {
+    print(" in render");
     final _gl = flutterGlPlugin.gl;
 
     int _current = DateTime.now().millisecondsSinceEpoch;
@@ -206,7 +215,9 @@ class _MyAppState extends State<ExampleTriangle01> {
     _gl.finish();
 
     if (!kIsWeb) {
+     // print("main update texture start sourcetexture"+sourceTexture.toString());
       flutterGlPlugin.updateTexture(sourceTexture);
+     // print("main update texture end");
     }
   }
 
