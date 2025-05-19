@@ -9,7 +9,7 @@ import 'OpenGL30Constant.dart';
 import 'opengl_es_bindings/src/gles_bindings.dart';
 
 getContext(Map<String, dynamic> parameters) {
-  if (Platform.isWindows) {
+  if (Platform.isWindows || Platform.isLinux) {
     return OpenGLContextDesktop(parameters);
   } else {
     return OpenGLContextES(parameters);
