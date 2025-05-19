@@ -49,7 +49,7 @@ class OpenGLES extends OpenGLBase {
     if (Platform.isAndroid) {
       return DynamicLibrary.open("libEGL.so");
     } else if (Platform.isWindows) {
-      return DynamicLibrary.open("flutter_gl_windows_plugin.dll");
+      return DynamicLibrary.open("flutter_gl_plugin.dll");
     } else {
       return DynamicLibrary.process();
     }
@@ -73,11 +73,12 @@ class OpenGLES extends OpenGLBase {
     if (Platform.isAndroid) {
       /// bind context to this thread. All following OpenGL calls from this thread will use this context
       eglMakeCurrent(_display, _surface, _surface, _context);
-    } else if (Platform.isIOS || Platform.isMacOS || Platform.isWindows) {
-      // var _d = egl.eglTest();
-      // print("makeCurrent egl test ${_d} ");
+    } else if (Platform.isIOS || Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      //var _d = egl.eglTest();
+     //  print("makeCurrent egl test ${_d} ");
       var _result = egl.makeCurrent(_context);
-      // print("ios makeCurrent _result: ${_result} ");
+
+      //print("ios makeCurrent _result: ${_result} ");
     } else {
       throw (" OpenGL-ES.makeCurrent ${Platform.operatingSystem} is not support yet ");
     }

@@ -734,8 +734,16 @@ class LibEGL {
   late final _eglTest_ptr = _lookup<ffi.NativeFunction<_c_eglTest>>('testEgl');
   late final _dart_eglTest _eglTest = _eglTest_ptr.asFunction<_dart_eglTest>();
 
-  int makeCurrent(int context) {
-    return _makeCurrent(context);
+  int makeCurrent(int context)  {
+    print("egl bindings makecurrenct"+context.toString());
+    //var ret=1;
+    //try {
+    return  _makeCurrent(context);
+    //} catch (error) {
+    //  print("makecurrent err");
+    //}
+    //print("egl bindings makecurrenct out ");
+    //return ret;
   }
 
   late final _makeCurrent_ptr =
