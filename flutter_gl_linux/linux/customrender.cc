@@ -1,6 +1,5 @@
 
 #include "include/customrender.h"
-#include "include/fl_my_texture_gl.h"
 #include <flutter_linux/fl_pixel_buffer_texture.h>
 #include <flutter_linux/fl_texture_registrar.h>
 
@@ -18,10 +17,8 @@ CustomRender::CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar
     printf(".... customrender create  %d\n", width);
     myTexturep = fl_my_texturep_gl_new(width, height);
     texture_ = FL_TEXTURE(myTexturep);
-
     fl_texture_registrar_register_texture(texture_registrar_, texture_);
     texture_id_ = fl_texture_get_id(texture_);
-
     initEGL();
 }
 
@@ -42,14 +39,13 @@ FlValue *CustomRender::getEgls()
 void CustomRender::initEGL()
 {
     printf(".... initEGL\n");
-    eglEnv = EglEnv();     // context_);//window_);//m_hWnd );
-    dartEglEnv = EglEnv(); // window_);//m_hWnd );
+    eglEnv = EglEnv();
+    dartEglEnv = EglEnv();
     printf(".... initegl eglenv setup\n");
-    eglEnv.setupRender(window_); //&shareEglEnv);
+    eglEnv.setupRender(window_);
     printf(".... initegl darteglenv setup\n");
-    dartEglEnv.setupRender(window_); //&shareEglEnv);
+    dartEglEnv.setupRender(window_);
     eglEnv.makeCurrent();
-    // glad: load all OpenGL function pointers
     initGL();
     renderWorker = RenderWorker();
     renderWorker.setup();
