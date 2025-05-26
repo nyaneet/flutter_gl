@@ -138,8 +138,10 @@ static void flutter_gl_linux_plugin_handle_method_call(
     }
     else if (strcmp(method, "dispose") == 0)
     {
-        printf(".... dispose in self\n");
-
+        int64_t textureId = fl_value_get_int(fl_value_lookup_string(args, "textureId"));
+        int sourceTexture = fl_value_get_int(fl_value_lookup_string(args, "sourceTexture"));
+        // self->render->deleteTexture(textureId);
+        // self->render->deleteTexture(sourceTexture);
         g_autoptr(FlValue) result = fl_value_new_null();
         response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
     }

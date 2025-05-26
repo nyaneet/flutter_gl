@@ -62,6 +62,8 @@ void CustomRender::initGL()
     GLuint texture = 0;
     glGenTextures(1, &texture);
 
+    printf("initGL, generate texture, id %ld \n\n", texture);
+
     glBindTexture(GLenum(GL_TEXTURE_2D), texture);
     glTexParameteri(GLenum(GL_TEXTURE_2D), GLenum(GL_TEXTURE_MAG_FILTER), GL_LINEAR);
     glTexParameteri(GLenum(GL_TEXTURE_2D), GLenum(GL_TEXTURE_MIN_FILTER), GL_LINEAR);
@@ -83,18 +85,28 @@ void CustomRender::initGL()
 
 int CustomRender::updateTexture(GLuint sourceTexture)
 {
+    printf("custom render, updateTexture, id: %ld", sourceTexture);
+
     eglEnv.makeCurrent();
     glBindFramebuffer(GLenum(GL_FRAMEBUFFER), frameBuffer);
 
     glClearColor(GLclampf(0.0), GLclampf(0.0), GLclampf(0.0), GLclampf(0.0));
     glClear(GLbitfield(GL_COLOR_BUFFER_BIT));
 
-    int data = renderWorker.renderTexture(sourceTexture); ///, false);
-
+    int data = renderWorker.renderTexture(sourceTexture);
     uint8_t *buffer = myTexturep->buffer;
     glReadPixels(0, 0, GLsizei(width), GLsizei(height), GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-
     fl_texture_registrar_mark_texture_frame_available(texture_registrar_, texture_);
-
     return data;
+}
+
+void CustomRender::deleteTexture(GLuint textureId)
+{
+    printf("custom render, deleteTexture, id: %ld\n", textureId);
+    glDeleteTextures(1, &textureId);
+
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        printf("*** OpenGL error after delete texture: 0x%08x ***\n", error);
+    }
 }
