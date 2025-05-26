@@ -36,12 +36,10 @@ public:
    // g_autoptr(FlValue) texture_id() const { return texture_id_; }
     int64_t texture_id() const { return texture_id_; }
     int updateTexture(GLuint sourceTexture);
-    void deleteTexture(GLuint textureId);
   //  EglEnv shareEglEnv;
     EglEnv eglEnv;
     EglEnv dartEglEnv;
     GLuint frameBuffer = 0;
-    // GLuint colorRenderBuffer = 0;
 private:
   //  std::unique_ptr<FlutterDesktopPixelBuffer> flutter_pixel_buffer_;
 
