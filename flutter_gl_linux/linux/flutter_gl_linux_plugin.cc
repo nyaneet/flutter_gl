@@ -89,11 +89,6 @@ static void flutter_gl_linux_plugin_handle_method_call(
                 self->myTexture->height == self->height)
             {
                 printf("....  shouldnt be here\n");
-                // g_autoptr(FlValue) result = fl_value_new_int(-1);
-                // response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
-                fl_texture_registrar_unregister_texture(self->texture_registrar, self->texture);
-                // if (getRenderer() != nullptr)
-                //	stopThread();
             }
 
             // printf(".... initialize %ld %ld\n",self->texture_registrar, self->width);
@@ -139,7 +134,6 @@ static void flutter_gl_linux_plugin_handle_method_call(
     else if (strcmp(method, "dispose") == 0)
     {
         printf(".... dispose in self\n");
-
         g_autoptr(FlValue) result = fl_value_new_null();
         response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
     }
