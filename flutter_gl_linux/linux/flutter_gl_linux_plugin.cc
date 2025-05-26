@@ -128,8 +128,7 @@ static void flutter_gl_linux_plugin_handle_method_call(
     }
     else if (strcmp(method, "updateTexture") == 0) // createSurface
     {
-
-        int textureId = fl_value_get_int(fl_value_lookup_string(args, "textureId"));
+        int64_t textureId = fl_value_get_int(fl_value_lookup_string(args, "textureId"));
         int sourceTexture = fl_value_get_int(fl_value_lookup_string(args, "sourceTexture"));
         //    printf(".... update texture vals %ld %ld\n",textureId, sourceTexture);
 
