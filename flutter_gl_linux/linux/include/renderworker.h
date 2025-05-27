@@ -27,6 +27,7 @@ public:
     OpenGLProgram openGLProgram;
     int renderTexture(GLuint sourceTexture);//, bool isFBO);
     int drawTexture(GLuint texture, GLuint vertexBuffer_);
+    void dispose();
 private:
   void setupVBO();
 };

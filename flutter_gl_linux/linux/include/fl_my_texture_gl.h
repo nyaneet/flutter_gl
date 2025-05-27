@@ -43,16 +43,12 @@ struct _FlutterGlLinuxPlugin
   GObject parent_instance;
   GdkGLContext *context = nullptr;
   FlTextureRegistrar *texture_registrar = nullptr;
-  FlMyTextureGL *myTexture = nullptr;
-  unsigned int texture_name = 0;
   FlView *fl_view = nullptr;
   GdkWindow *window = nullptr; // glenn
   uint32_t width = 0;          // glenn
   uint32_t height = 0;         // glenn
   CustomRender *render = nullptr;
-  std::map<int64_t, std::unique_ptr<CustomRender>> *renders_ = nullptr; // unique_ptr<CustomRender>> renders_;
-  // FlValue *fl_vectoregls= nullptr;
-  // std::map<int64_t, std::string> voot;//unique_ptr<CustomRender>> renders_;
+  std::map<int64_t, std::unique_ptr<CustomRender>> *renders_ = nullptr;
 };
 
 FlMyTextureGL *fl_my_texture_gl_new(uint32_t target,

@@ -11,9 +11,7 @@
 }
 */
 void EglEnv::setupRender(GdkWindow *window)
-{ // EglEnv* shareEglEnv) {//EGLContext shareContext) {//) {
-  //  glfwInit();
-  // GError *error = NULL;
+{
   g_autoptr(GError) error = nullptr;
   context_ = gdk_window_create_gl_context(window, &error);
   printf(".... eglenv setuprender \n"); //%ld\n",context_);
@@ -28,17 +26,21 @@ void EglEnv::setupRender(GdkWindow *window)
   }
   if (error != NULL)
   {
-    // mylog("make current realize failure");
     printf(".... setuprenderer realize failed\n");
-    //  std::cout << error->message << std::endl;
     g_clear_error(&error);
-  } // else
-  //    mylog("make current realize fine");
+  }
 }
 
 void EglEnv::makeCurrent()
 {
-  //  printf(".... eglenv make current\n");
-
   gdk_gl_context_make_current(context_); // window_);
+}
+
+void EglEnv::dispose()
+{
+  // GdkSurface* surface = gdk_gl_context_get_surface(context_);
+  // gdk_surface_destroy(&context_);
+  // surface = nullptr;
+  g_clear_object(&context_);
+  gdk_gl_context_clear_current();
 }

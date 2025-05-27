@@ -2,7 +2,8 @@
 
 GLuint OpenGLProgram::getProgram()
 {
-
+    if (programHandle != 0)
+        return programHandle;
     char *vertex_shader = "#version 410\n"
                           "precision mediump float;\n"
                           "in vec4 Position;\n"
@@ -28,11 +29,9 @@ GLuint OpenGLProgram::getProgram()
 
 GLuint OpenGLProgram::compileShaders(char *vertex_shader, char *fragment_shader)
 {
-
     GLuint vertexShader = compileShader(vertex_shader, GLenum(GL_VERTEX_SHADER));
     GLuint fragmentShader = compileShader(fragment_shader, GLenum(GL_FRAGMENT_SHADER));
-
-    GLuint programHandle = glCreateProgram();
+    programHandle = glCreateProgram();
 
     glAttachShader(programHandle, vertexShader);
     glAttachShader(programHandle, fragmentShader);
@@ -47,7 +46,8 @@ GLuint OpenGLProgram::compileShaders(char *vertex_shader, char *fragment_shader)
 
         // let shaderLogString = NSString(utf8String: shaderLog)!
     }
-
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
     return programHandle;
 }
 
@@ -69,13 +69,11 @@ unsigned int OpenGLProgram::compileShaderCode(char *shaderCode, GLenum type)
     {
         char infoLog[512];
         glGetShaderInfoLog(GLuint(shaderHandle), 512, NULL, infoLog);
-
-        //    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
-
     return shaderHandle;
 }
 
-// func dispose() {
-// // TODO
-// }
+void OpenGLProgram::dispose()
+{
+    glDeleteProgram(programHandle);
+}
