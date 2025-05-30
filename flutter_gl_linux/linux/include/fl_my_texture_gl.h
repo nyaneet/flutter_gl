@@ -11,12 +11,12 @@
 #include <glib.h>
 #include <GL/gl.h>*/
 #include "flutter_gl_linux/flutter_gl_linux_plugin.h"
-#include  "customrender.h"
+#include "customrender.h"
 #include <flutter_linux/flutter_linux.h>
 #include <map>
-//#include <string>
+// #include <string>
 #include <memory>
-//#include <sstream>
+// #include <sstream>
 
 G_DECLARE_FINAL_TYPE(FlMyTextureGL,
                      fl_my_texture_gl,
@@ -26,14 +26,13 @@ G_DECLARE_FINAL_TYPE(FlMyTextureGL,
 
 struct _FlMyTextureGL
 {
-   // FlTextureGL
-            FlPixelBufferTexture parent_instance;
-    uint32_t target;
-    uint32_t name;
-    uint32_t width;
-    uint32_t height;
+  // FlTextureGL
+  FlPixelBufferTexture parent_instance;
+  uint32_t target;
+  uint32_t name;
+  uint32_t width;
+  uint32_t height;
 };
-
 
 #define FLUTTER_GL_LINUX_PLUGIN(obj)                                     \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), flutter_gl_linux_plugin_get_type(), \
@@ -44,19 +43,13 @@ struct _FlutterGlLinuxPlugin
   GObject parent_instance;
   GdkGLContext *context = nullptr;
   FlTextureRegistrar *texture_registrar = nullptr;
-  FlMyTextureGL *myTexture = nullptr;
-  unsigned int texture_name = 0;
-  FlTexture *texture = nullptr;
   FlView *fl_view = nullptr;
-    GdkWindow *window = nullptr; //glenn
-    uint32_t width =0; //glenn
-    uint32_t height=0; //glenn
-     CustomRender *render = nullptr;
-   std::map<int64_t, std::unique_ptr<CustomRender>> *renders_ = nullptr;//unique_ptr<CustomRender>> renders_;
-   // FlValue *fl_vectoregls= nullptr;
-    // std::map<int64_t, std::string> voot;//unique_ptr<CustomRender>> renders_;
+  GdkWindow *window = nullptr; // glenn
+  uint32_t width = 0;          // glenn
+  uint32_t height = 0;         // glenn
+  CustomRender *render = nullptr;
+  std::map<int64_t, std::unique_ptr<CustomRender>> *renders_ = nullptr;
 };
-
 
 FlMyTextureGL *fl_my_texture_gl_new(uint32_t target,
                                     uint32_t name,

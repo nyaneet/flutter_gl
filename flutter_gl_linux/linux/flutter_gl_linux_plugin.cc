@@ -83,29 +83,13 @@ static void flutter_gl_linux_plugin_handle_method_call(
         }
         else
         {
-
-            if (self->context != nullptr &&
-                self->myTexture->width == self->width &&
-                self->myTexture->height == self->height)
-            {
-                printf("....  shouldnt be here\n");
-                // g_autoptr(FlValue) result = fl_value_new_int(-1);
-                // response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
-                fl_texture_registrar_unregister_texture(self->texture_registrar, self->texture);
-                // if (getRenderer() != nullptr)
-                //	stopThread();
-            }
-
-            // printf(".... initialize %ld %ld\n",self->texture_registrar, self->width);
             printf(".... initialize  %d %d\n", self->width, self->height);
-
             self->window = gtk_widget_get_parent_window(GTK_WIDGET(self->fl_view));
 
             CustomRender *customRender = new CustomRender(self->width, self->height, self->texture_registrar, self->window); // context);
             self->render = customRender;
 
             int64_t textureID = customRender->texture_id();
-
             printf(".... textureid %ld\n", textureID);
 
             g_autoptr(FlValue) data = fl_value_new_map();
@@ -128,8 +112,7 @@ static void flutter_gl_linux_plugin_handle_method_call(
     }
     else if (strcmp(method, "updateTexture") == 0) // createSurface
     {
-
-        int textureId = fl_value_get_int(fl_value_lookup_string(args, "textureId"));
+        int64_t textureId = fl_value_get_int(fl_value_lookup_string(args, "textureId"));
         int sourceTexture = fl_value_get_int(fl_value_lookup_string(args, "sourceTexture"));
         //    printf(".... update texture vals %ld %ld\n",textureId, sourceTexture);
 
@@ -140,7 +123,7 @@ static void flutter_gl_linux_plugin_handle_method_call(
     else if (strcmp(method, "dispose") == 0)
     {
         printf(".... dispose in self\n");
-
+        self->render->dispose();
         g_autoptr(FlValue) result = fl_value_new_null();
         response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
     }

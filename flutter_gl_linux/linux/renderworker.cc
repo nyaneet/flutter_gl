@@ -117,6 +117,14 @@ void RenderWorker::setupVBO()
     };*/
   glGenBuffers(1, &vertexBuffer);
   glBindBuffer(GLenum(GL_ARRAY_BUFFER), vertexBuffer);
-
+  
   glBufferData(GLenum(GL_ARRAY_BUFFER), sizeof(vertices), vertices, GLenum(GL_STATIC_DRAW));
+}
+
+void RenderWorker::dispose() {
+  printf("dispose render worker\n\n\n");
+  glDeleteBuffers(1, &vertexBuffer);
+  openGLProgram.dispose();
+  glUseProgram(0);
+  program = 0;
 }

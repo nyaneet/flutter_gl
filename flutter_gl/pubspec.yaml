@@ -1,7 +1,7 @@
 name: flutter_gl
-description: cross-platform call OpenGL API by Dart through dart:ffi. 3D programming in the cross-platform.  Provides OpenGL with Texture Widget on Flutter. 
-version: 0.0.21
-homepage: https://github.com/wasabia/flutter_gl
+description: cross-platform call OpenGL API by Dart through dart:ffi. 3D programming in the cross-platform.  Provides OpenGL with Texture Widget on Flutter.
+version: 0.0.1
+publish_to: none
 
 environment:
   sdk: ">=2.17.1 <3.0.0"
@@ -10,10 +10,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_gl_platform_interface: ^0.0.4
-  flutter_gl_web: ^0.0.5
-  flutter_gl_macos: ^0.0.4
-  flutter_gl_windows: ^0.0.3
+  flutter_gl_platform_interface:
+    path: ../flutter_gl_platform_interface
+  flutter_gl_web:
+    path: ../flutter_gl_web
+  flutter_gl_macos:
+    path: ../flutter_gl_macos
+  flutter_gl_windows:
+    path: ../flutter_gl_windows
   flutter_gl_linux:
     path: ../flutter_gl_linux
   ffi: ^2.0.1
@@ -47,8 +51,6 @@ flutter:
         default_package: flutter_gl_windows
       linux:
         default_package: flutter_gl_linux
-
-
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

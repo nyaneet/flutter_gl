@@ -1,6 +1,5 @@
 
 #include "include/customrender.h"
-#include "include/fl_my_texture_gl.h"
 #include <flutter_linux/fl_pixel_buffer_texture.h>
 #include <flutter_linux/fl_texture_registrar.h>
 
@@ -9,7 +8,6 @@ static FlTexture *texture_;
 static FlMyTexturePGL *myTexturep;
 
 CustomRender::CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window)
-
 {
     texture_registrar_ = texture_registrar;
     window_ = window;
@@ -18,10 +16,8 @@ CustomRender::CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar
     printf(".... customrender create  %d\n", width);
     myTexturep = fl_my_texturep_gl_new(width, height);
     texture_ = FL_TEXTURE(myTexturep);
-
     fl_texture_registrar_register_texture(texture_registrar_, texture_);
     texture_id_ = fl_texture_get_id(texture_);
-
     initEGL();
 }
 
@@ -42,14 +38,13 @@ FlValue *CustomRender::getEgls()
 void CustomRender::initEGL()
 {
     printf(".... initEGL\n");
-    eglEnv = EglEnv();     // context_);//window_);//m_hWnd );
-    dartEglEnv = EglEnv(); // window_);//m_hWnd );
+    eglEnv = EglEnv();
+    dartEglEnv = EglEnv();
     printf(".... initegl eglenv setup\n");
-    eglEnv.setupRender(window_); //&shareEglEnv);
+    eglEnv.setupRender(window_);
     printf(".... initegl darteglenv setup\n");
-    dartEglEnv.setupRender(window_); //&shareEglEnv);
+    dartEglEnv.setupRender(window_);
     eglEnv.makeCurrent();
-    // glad: load all OpenGL function pointers
     initGL();
     renderWorker = RenderWorker();
     renderWorker.setup();
@@ -63,7 +58,6 @@ void CustomRender::initGL()
     glGenFramebuffers(1, &frameBuffer);
     glBindFramebuffer(GLenum(GL_FRAMEBUFFER), frameBuffer);
 
-    GLuint texture = 0;
     glGenTextures(1, &texture);
 
     glBindTexture(GLenum(GL_TEXTURE_2D), texture);
@@ -73,7 +67,6 @@ void CustomRender::initGL()
     glTexImage2D(GLenum(GL_TEXTURE_2D), 0, GLenum(GL_RGBA), GLsizei(width), GLsizei(height), 0, GLenum(GL_RGBA),
                  GLenum(GL_UNSIGNED_BYTE), NULL);
 
-    GLuint colorRenderBuffer = 0;
     glGenRenderbuffers(1, &colorRenderBuffer);
     glBindRenderbuffer(GLenum(GL_RENDERBUFFER), colorRenderBuffer);
     glRenderbufferStorage(GLenum(GL_RENDERBUFFER), GLenum(GL_DEPTH24_STENCIL8), GLsizei(width), GLsizei(height));
@@ -82,6 +75,7 @@ void CustomRender::initGL()
 
     glFramebufferRenderbuffer(GLenum(GL_FRAMEBUFFER), GLenum(GL_DEPTH_ATTACHMENT), GLenum(GL_RENDERBUFFER), colorRenderBuffer);
     glFramebufferRenderbuffer(GLenum(GL_FRAMEBUFFER), GLenum(GL_STENCIL_ATTACHMENT), GLenum(GL_RENDERBUFFER), colorRenderBuffer);
+
     printf(".... initGL exit %d\n", width);
 }
 
@@ -101,4 +95,24 @@ int CustomRender::updateTexture(GLuint sourceTexture)
     fl_texture_registrar_mark_texture_frame_available(texture_registrar_, texture_);
 
     return data;
+}
+
+void CustomRender::dispose() {
+    // Free up textures data
+    // myTexturep
+    free(myTexturep->buffer);
+    myTexturep = nullptr;
+    fl_texture_registrar_unregister_texture(texture_registrar_, texture_);
+    texture_registrar_ = nullptr;
+    texture_ = nullptr;
+    // texture
+    glDeleteTextures(1, &texture);
+    // Delete buffers
+    glDeleteFramebuffers(1, &frameBuffer);
+    glDeleteRenderbuffers(1, &colorRenderBuffer);
+    // Dispose RenderWorker
+    renderWorker.dispose();
+    // Free up contexts
+    eglEnv.dispose();
+    dartEglEnv.dispose();
 }

@@ -13,12 +13,12 @@ static gboolean my_texturep_copy_pixels(FlPixelBufferTexture *texture,
                                         uint32_t *height,
                                         GError **error)
 {
-  FlMyTexturePGL *f = (FlMyTexturePGL *)texture;
-  *out_buffer = f->buffer;
-  *width = f->width;
-  *height = f->height;
+  FlMyTexturePGL *self = (FlMyTexturePGL *)texture;
+  *out_buffer = self->buffer;
+  *width = self->width;
+  *height = self->height;
   return TRUE;
-  // This method is called on Render Thread. Be careful with your
+    // This method is called on Render Thread. Be careful with your
   // cross-thread operation.
 
   // @width and @height are initially stored the canvas size in Flutter.
@@ -47,16 +47,14 @@ static gboolean my_texturep_copy_pixels(FlPixelBufferTexture *texture,
 }
 
 FlMyTexturePGL *fl_my_texturep_gl_new(uint32_t width,
-                                      uint32_t height) // uint8_t *buffer)
+                                      uint32_t height)
 {
-  auto r = FL_MY_TEXTUREP_GL(g_object_new(fl_my_texturep_gl_get_type(), nullptr));
-  // r->buffer = buffer;
-  r->width = width;
-  r->height = height;
-  printf(".... create flmytexturepgl\n");
-  r->buffer = static_cast<uint8_t *>(malloc(r->width * r->height * 8));
+  auto self = FL_MY_TEXTUREP_GL(g_object_new(fl_my_texturep_gl_get_type(), nullptr));
+  self->width = width;
+  self->height = height;
+  self->buffer = static_cast<uint8_t *>(malloc(self->width * self->height * 8));
 
-  return r;
+  return self;
 }
 
 static void fl_my_texturep_gl_class_init(
