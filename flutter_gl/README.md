@@ -2,11 +2,9 @@
 
 cross-platform call OpenGL API by Dart through dart:ffi. Provides OpenGL with Texture Widget on Flutter. 
 
-Support iOS, Android, Web, macOS, Windows
+Support iOS, Android, Web, macOS, Windows, Linux
 
-Linux TODO
-
-Used by [three_dart](https://github.com/wasabia/three_dart)
+Used by [three_dart](https://github.com/nyaneet/three_dart)
 
 
 ## OpenGL API
@@ -51,13 +49,13 @@ gl.clearColor(0.0, 0.0, 0.0, 1.0);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
 // use this method to notify Flutter update Texture Widget
-// sourceTextue is a texture which bind to FBO framebuffer
+// sourceTexture is a texture which bind to FBO framebuffer
 flutterGlPlugin.updateTexture(sourceTexture);
 ```
 
 ### why use NativeArray replace Dart List
 
-Dart List convert to ffi pointer need memeory copy.
+Dart List convert to ffi pointer need memory copy.
 
 ### Run Examples
 

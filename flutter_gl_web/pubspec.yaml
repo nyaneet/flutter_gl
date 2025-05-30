@@ -1,7 +1,7 @@
 name: flutter_gl_web
-description: Web platform implementation of flutter_gl, cross-platform call OpenGL API by Dart through dart:ffi. Provides OpenGL with Texture Widget on Flutter. 
-homepage: https://github.com/wasabia/flutter_gl
-version: 0.0.5
+description: Web platform implementation of flutter_gl, cross-platform call OpenGL API by Dart through dart:ffi. Provides OpenGL with Texture Widget on Flutter.
+version: 0.0.1
+publish_to: none
 
 flutter:
   plugin:
@@ -10,13 +10,14 @@ flutter:
         pluginClass: FlutterGlPlugin
         fileName: flutter_gl_web.dart
 
-dependencies:  
+dependencies:
   flutter:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  flutter_gl_platform_interface: ^0.0.4
- 
+  flutter_gl_platform_interface:
+    path: ../flutter_gl_platform_interface
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

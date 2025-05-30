@@ -1,5 +1,5 @@
-name: flutter_gl_windows
-description: Windows platform implementation of flutter_gl, cross-platform call OpenGL API by Dart through dart:ffi. Provides OpenGL with Texture Widget on Flutter.
+name: flutter_gl_linux
+description: Linux platform implementation of flutter_gl, cross-platform call OpenGL API by Dart through dart:ffi. Provides OpenGL with Texture Widget on Flutter.
 version: 0.0.1
 publish_to: none
 
@@ -30,8 +30,8 @@ flutter:
   plugin:
     implements: flutter_gl
     platforms:
-      windows:
-        pluginClass: FlutterGlWindowsPlugin
+      linux:
+        pluginClass: FlutterGlLinuxPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

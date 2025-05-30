@@ -30,7 +30,7 @@ class OpenGLContextDesktop extends OpenGL30Constant {
   }
 
   List<String> getExtension(String key) {
-    if (Platform.isMacOS || Platform.isWindows) {
+    if (Platform.isMacOS || Platform.isWindows|| Platform.isLinux) {
       return getExtensionDesktop(key);
     }
 
