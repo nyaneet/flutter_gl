@@ -125,6 +125,5 @@ void RenderWorker::dispose() {
   printf("dispose render worker\n\n\n");
   glDeleteBuffers(1, &vertexBuffer);
   openGLProgram.dispose();
-  glUseProgram(0);
   program = 0;
 }
