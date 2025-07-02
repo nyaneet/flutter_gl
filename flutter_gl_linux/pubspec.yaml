@@ -1,6 +1,6 @@
 name: flutter_gl_linux
 description: Linux platform implementation of flutter_gl, cross-platform call OpenGL API by Dart through dart:ffi. Provides OpenGL with Texture Widget on Flutter.
-version: 0.0.1
+version: 0.0.2
 publish_to: none
 
 environment:
