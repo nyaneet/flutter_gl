@@ -16,6 +16,9 @@ public:
   CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window);
   GdkWindow *window_; // m_hWnd;
   RenderWorker renderWorker;
+  FlTextureRegistrar *texture_registrar_;
+  FlTexture *texture_;
+  FlMyTexturePGL *myTexturep;
   void initEGL();
   void initGL();
   void dispose();
@@ -23,8 +26,8 @@ public:
   int64_t texture_id() const { return texture_id_; }
   int updateTexture(GLuint sourceTexture);
   //  EglEnv shareEglEnv;
-  EglEnv eglEnv;
-  EglEnv dartEglEnv;
+  static EglEnv *eglEnv;
+  static EglEnv *dartEglEnv;
   GLuint frameBuffer = 0;
   GLuint colorRenderBuffer = 0;
   GLuint texture = 0;
