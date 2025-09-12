@@ -56,6 +56,10 @@ static void flutter_gl_linux_plugin_handle_method_call(
     const gchar *method = fl_method_call_get_name(method_call);
     // Get Dart arguments
     FlValue *args = fl_method_call_get_args(method_call);
+    
+    if (self->renders_ == nullptr) {
+        self-> renders_ = new std::map<int64_t, CustomRender*>();
+    }
 
     /********************************************/
     /*** CREATE SURFACE *************************/
@@ -87,9 +91,10 @@ static void flutter_gl_linux_plugin_handle_method_call(
             self->window = gtk_widget_get_parent_window(GTK_WIDGET(self->fl_view));
 
             CustomRender *customRender = new CustomRender(self->width, self->height, self->texture_registrar, self->window); // context);
-            self->render = customRender;
-
             int64_t textureID = customRender->texture_id();
+            self->renders_->insert({textureID, customRender});
+            // self->render = customRender;
+
             printf(".... textureid %ld\n", textureID);
 
             g_autoptr(FlValue) data = fl_value_new_map();
@@ -105,7 +110,9 @@ static void flutter_gl_linux_plugin_handle_method_call(
 
         printf(".... getegl\n");
 
-        g_autoptr(FlValue) fl_vector = self->render->getEgls();
+        // g_autoptr(FlValue) fl_vector = self->render->getEgls();
+        int64_t textureId = fl_value_get_int(fl_value_lookup_string(args, "textureId"));
+        g_autoptr(FlValue) fl_vector = self->renders_->at(textureId)->getEgls();
         printf(".... getegl render getegls\n");
 
         response = FL_METHOD_RESPONSE(fl_method_success_response_new(fl_vector));
@@ -116,14 +123,17 @@ static void flutter_gl_linux_plugin_handle_method_call(
         int sourceTexture = fl_value_get_int(fl_value_lookup_string(args, "sourceTexture"));
         //    printf(".... update texture vals %ld %ld\n",textureId, sourceTexture);
 
-        int data = self->render->updateTexture(sourceTexture);
+        // int data = self->render->updateTexture(sourceTexture);
+        int data = self->renders_->at(textureId)->updateTexture(sourceTexture);
 
         response = FL_METHOD_RESPONSE(fl_method_success_response_new(fl_value_new_int(data)));
     }
     else if (strcmp(method, "dispose") == 0)
     {
         printf(".... dispose in self\n");
-        self->render->dispose();
+        int64_t textureId = fl_value_get_int(fl_value_lookup_string(args, "textureId"));
+        self->renders_->at(textureId)->dispose();
+        // self->render->dispose();
         g_autoptr(FlValue) result = fl_value_new_null();
         response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
     }
@@ -145,7 +155,6 @@ static void flutter_gl_linux_plugin_dispose(GObject *object)
 static void flutter_gl_linux_plugin_class_init(FlutterGlLinuxPluginClass *klass)
 {
     printf(".... class init\n");
-
     G_OBJECT_CLASS(klass)->dispose = flutter_gl_linux_plugin_dispose;
 }
 

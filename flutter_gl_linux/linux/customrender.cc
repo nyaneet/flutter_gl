@@ -3,9 +3,8 @@
 #include <flutter_linux/fl_pixel_buffer_texture.h>
 #include <flutter_linux/fl_texture_registrar.h>
 
-static FlTextureRegistrar *texture_registrar_;
-static FlTexture *texture_;
-static FlMyTexturePGL *myTexturep;
+EglEnv* CustomRender::eglEnv = nullptr;
+EglEnv* CustomRender::dartEglEnv = nullptr;
 
 CustomRender::CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window)
 {
@@ -27,24 +26,28 @@ FlValue *CustomRender::getEgls()
     fl_value_append(fl_vector, fl_value_new_int(0));
     fl_value_append(fl_vector, fl_value_new_int(0));
     // eglEnv.window
-    fl_value_append(fl_vector, fl_value_new_int(reinterpret_cast<int64_t>(eglEnv.context_))); // context_)));
+    fl_value_append(fl_vector, fl_value_new_int(reinterpret_cast<int64_t>(eglEnv->context_))); // context_)));
     fl_value_append(fl_vector, fl_value_new_int(0));
     fl_value_append(fl_vector, fl_value_new_int(0));
     // dartEglEnv.window
-    fl_value_append(fl_vector, fl_value_new_int(reinterpret_cast<int64_t>(dartEglEnv.context_))); // context_)));
+    fl_value_append(fl_vector, fl_value_new_int(reinterpret_cast<int64_t>(dartEglEnv->context_))); // context_)));
     return fl_value_ref(fl_vector);
 }
 
 void CustomRender::initEGL()
 {
     printf(".... initEGL\n");
-    eglEnv = EglEnv();
-    dartEglEnv = EglEnv();
-    printf(".... initegl eglenv setup\n");
-    eglEnv.setupRender(window_);
-    printf(".... initegl darteglenv setup\n");
-    dartEglEnv.setupRender(window_);
-    eglEnv.makeCurrent();
+    if (eglEnv == nullptr) {
+        printf(".... initegl eglenv setup\n");
+        eglEnv = new EglEnv();
+        eglEnv->setupRender(window_);
+    }
+    if (dartEglEnv == nullptr) {
+        printf(".... initegl darteglenv setup\n");
+        dartEglEnv = new EglEnv();
+        dartEglEnv->setupRender(window_);
+    }
+    eglEnv->makeCurrent();
     initGL();
     renderWorker = RenderWorker();
     renderWorker.setup();
@@ -81,7 +84,7 @@ void CustomRender::initGL()
 
 int CustomRender::updateTexture(GLuint sourceTexture)
 {
-    eglEnv.makeCurrent();
+    eglEnv->makeCurrent();
     glBindFramebuffer(GLenum(GL_FRAMEBUFFER), frameBuffer);
 
     glClearColor(GLclampf(0.0), GLclampf(0.0), GLclampf(0.0), GLclampf(0.0));
@@ -109,10 +112,10 @@ void CustomRender::dispose() {
     glDeleteTextures(1, &texture);
     // Delete buffers
     glDeleteFramebuffers(1, &frameBuffer);
-    glDeleteRenderbuffers(1, &colorRenderBuffer);
+    glDeleteRenderbuffers(1, &colorRenderBuffer); 
     // Dispose RenderWorker
     renderWorker.dispose();
     // Free up contexts
-    eglEnv.dispose();
-    dartEglEnv.dispose();
+    // eglEnv->dispose();
+    // dartEglEnv->dispose();
 }

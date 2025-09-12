@@ -17,7 +17,7 @@ typedef struct {
 } FlutterGlLinuxPluginClass;
 
 FLUTTER_PLUGIN_EXPORT GType flutter_gl_linux_plugin_get_type();
-
+  
 FLUTTER_PLUGIN_EXPORT void flutter_gl_linux_plugin_register_with_registrar(
     FlPluginRegistrar* registrar);
 
