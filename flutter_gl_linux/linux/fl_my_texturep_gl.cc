@@ -52,8 +52,13 @@ FlMyTexturePGL *fl_my_texturep_gl_new(uint32_t width,
   auto self = FL_MY_TEXTUREP_GL(g_object_new(fl_my_texturep_gl_get_type(), nullptr));
   self->width = width;
   self->height = height;
-  self->buffer = static_cast<uint8_t *>(malloc(self->width * self->height * 8));
-
+  size_t total_size = self->width * self->height * 8;
+  self->buffer = static_cast<uint8_t *>(
+    malloc(total_size)
+  );
+  if (self->buffer != NULL) {
+    memset(self->buffer, 0, total_size);
+  }
   return self;
 }
 
