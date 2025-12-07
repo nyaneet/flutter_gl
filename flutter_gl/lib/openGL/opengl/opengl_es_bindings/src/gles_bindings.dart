@@ -6512,7 +6512,7 @@ class LibOpenGLES {
           .asFunction<_dart_glTexStorage3DMultisample>();
 }
 
-class __darwin_pthread_handler_rec extends ffi.Struct {
+base class __darwin_pthread_handler_rec extends ffi.Struct {
   external ffi.Pointer<ffi.NativeFunction<_typedefC_1>> __routine;
 
   external ffi.Pointer<ffi.Void> __arg;
@@ -6520,23 +6520,23 @@ class __darwin_pthread_handler_rec extends ffi.Struct {
   external ffi.Pointer<__darwin_pthread_handler_rec> __next;
 }
 
-class _opaque_pthread_attr_t extends ffi.Opaque {}
+base class _opaque_pthread_attr_t extends ffi.Opaque {}
 
-class _opaque_pthread_cond_t extends ffi.Opaque {}
+base class _opaque_pthread_cond_t extends ffi.Opaque {}
 
-class _opaque_pthread_condattr_t extends ffi.Opaque {}
+base class _opaque_pthread_condattr_t extends ffi.Opaque {}
 
-class _opaque_pthread_mutex_t extends ffi.Opaque {}
+base class _opaque_pthread_mutex_t extends ffi.Opaque {}
 
-class _opaque_pthread_mutexattr_t extends ffi.Opaque {}
+base class _opaque_pthread_mutexattr_t extends ffi.Opaque {}
 
-class _opaque_pthread_once_t extends ffi.Opaque {}
+base class _opaque_pthread_once_t extends ffi.Opaque {}
 
-class _opaque_pthread_rwlock_t extends ffi.Opaque {}
+base class _opaque_pthread_rwlock_t extends ffi.Opaque {}
 
-class _opaque_pthread_rwlockattr_t extends ffi.Opaque {}
+base class _opaque_pthread_rwlockattr_t extends ffi.Opaque {}
 
-class _opaque_pthread_t extends ffi.Opaque {}
+base class _opaque_pthread_t extends ffi.Opaque {}
 
 abstract class khronos_boolean_enum_t {
   static const int KHRONOS_FALSE = 0;
@@ -6544,7 +6544,7 @@ abstract class khronos_boolean_enum_t {
   static const int KHRONOS_BOOLEAN_ENUM_FORCE_SIZE = 2147483647;
 }
 
-class __GLsync extends ffi.Opaque {}
+base class __GLsync extends ffi.Opaque {}
 
 const int __gles2_gl2ext_h_ = 1;
 
