@@ -2,21 +2,11 @@
 #define FLUTTER_MY_TEXTURE_H
 
 #include "fluttercommon.h"
-/*#include <gtk/gtk.h>
-#include <glib-object.h>
-#include <GL/glew.h>
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-
-#include <glib.h>
-#include <GL/gl.h>*/
 #include "flutter_gl_linux/flutter_gl_linux_plugin.h"
 #include "customrender.h"
 #include <flutter_linux/flutter_linux.h>
 #include <map>
-// #include <string>
 #include <memory>
-// #include <sstream>
 
 G_DECLARE_FINAL_TYPE(FlMyTextureGL,
                      fl_my_texture_gl,

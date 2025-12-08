@@ -7,15 +7,6 @@
 #include "OpenGLProgram.h"
 #include <flutter_linux/flutter_linux.h>
 
-//#include <GL/glew.h>
-// #include <GL/glut.h>
-//#include "flutter_gl_linux/flutter_gl_linux_plugin.h"
-//#include "customrender.h"
-//#include <GL/gl.h>
-//#include <EGL/egl.h>
-//#include "../../src/common.h"
-//#include "fl_my_texture_gl.h"
-
 class RenderWorker {
 public:
    // RenderWorker();
