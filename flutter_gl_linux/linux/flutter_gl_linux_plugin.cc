@@ -2,34 +2,8 @@
 
 #include <flutter_linux/flutter_linux.h>
 #include <flutter_linux/fl_view.h>
-#include <sys/utsname.h>
-#include <glib.h>
-
-#include <GL/glew.h>
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-
-#include <cstring>
-#include <iostream>
-#include <memory>
-#include <future>
-#include <chrono>
-#include <map>
-#include <fstream>
-// #include <utility>
-#include <iomanip>
-#include <ctime>
-// #include <chrono>
-#include <thread>
-
-#include <X11/Xlib.h>
-#include <mutex>
-
 #include "include/fl_my_texture_gl.h"
-// #include "../src/ffi.h"
-// #include "../src/common.h"
-// #include "include/test.h"
-// #include "include/customrender.h"
+#include <iostream>
 
 G_DEFINE_TYPE(FlutterGlLinuxPlugin, flutter_gl_linux_plugin, g_object_get_type())
 
@@ -41,8 +15,6 @@ static void mylog(const std::string &input)
     // cout << input << endl;
 }
 
-// mutable
-std::mutex mutex_;
 
 // Called when a method call is received from Flutter.
 static void flutter_gl_linux_plugin_handle_method_call(
@@ -89,7 +61,7 @@ static void flutter_gl_linux_plugin_handle_method_call(
         {
             printf(".... initialize  %d %d\n", self->width, self->height);
             self->window = gtk_widget_get_parent_window(GTK_WIDGET(self->fl_view));
-
+            printf(".... initialize custom render");
             CustomRender *customRender = new CustomRender(self->width, self->height, self->texture_registrar, self->window); // context);
             int64_t textureID = customRender->texture_id();
             self->renders_->insert({textureID, customRender});
