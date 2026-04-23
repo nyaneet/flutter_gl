@@ -65,10 +65,7 @@ void CustomRender::initEGL()
     renderWorker = RenderWorker();
     renderWorker.setup();
 
-    if (dartEglEnv)
-    {
-        dartEglEnv->makeCurrent();
-    }
+    gdk_gl_context_clear_current();
 }
 
 void CustomRender::initGL()
@@ -115,10 +112,7 @@ int CustomRender::updateTexture(GLuint sourceTexture)
 
     fl_texture_registrar_mark_texture_frame_available(texture_registrar_, texture_);
 
-    if (dartEglEnv)
-    {
-        dartEglEnv->makeCurrent();
-    }
+    gdk_gl_context_clear_current();
 
     return data;
 }
@@ -145,10 +139,7 @@ void CustomRender::dispose()
     // Dispose RenderWorker
     renderWorker.dispose();
 
-    if (dartEglEnv)
-    {
-        dartEglEnv->makeCurrent();
-    }
+    gdk_gl_context_clear_current();
 
     if (eglEnv)
     {
