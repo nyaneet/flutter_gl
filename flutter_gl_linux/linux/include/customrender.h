@@ -13,7 +13,7 @@ class CustomRender
 public:
   uint32_t width;
   uint32_t height;
-  CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window);
+  CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window, EglEnv *dartEglEnv_);
   GdkWindow *window_; // m_hWnd;
   RenderWorker renderWorker;
   FlTextureRegistrar *texture_registrar_;

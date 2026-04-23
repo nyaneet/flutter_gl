@@ -42,6 +42,7 @@ struct _FlutterGlLinuxPlugin
   uint32_t height = 0;         // glenn
   // CustomRender *render = nullptr;
   std::map<int64_t, CustomRender *> *renders_ = nullptr;
+  EglEnv *dartEglEnv = nullptr;
 };
 
 FlMyTextureGL *fl_my_texture_gl_new(uint32_t target,

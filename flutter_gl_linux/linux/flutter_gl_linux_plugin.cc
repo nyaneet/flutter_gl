@@ -76,8 +76,15 @@ static void flutter_gl_linux_plugin_handle_method_call(
             }
             else
             {
-                printf(".... initialize custom render");
-                CustomRender *customRender = new CustomRender(self->width, self->height, self->texture_registrar, self->window);
+                printf(".... initialize custom render\n");
+
+                if (self->dartEglEnv == nullptr)
+                {
+                    self->dartEglEnv = new EglEnv();
+                    self->dartEglEnv->setupRender(self->window);
+                }
+
+                CustomRender *customRender = new CustomRender(self->width, self->height, self->texture_registrar, self->window, self->dartEglEnv);
                 int64_t textureID = customRender->texture_id();
                 self->renders_->insert({textureID, customRender});
 
@@ -157,6 +164,13 @@ static void flutter_gl_linux_plugin_dispose(GObject *object)
         self->renders_ = nullptr;
     }
 
+    if (self->dartEglEnv != nullptr)
+    {
+        self->dartEglEnv->dispose();
+        delete self->dartEglEnv;
+        self->dartEglEnv = nullptr;
+    }
+
     G_OBJECT_CLASS(flutter_gl_linux_plugin_parent_class)->dispose(object);
 }
 
@@ -169,6 +183,7 @@ static void flutter_gl_linux_plugin_class_init(FlutterGlLinuxPluginClass *klass)
 static void flutter_gl_linux_plugin_init(FlutterGlLinuxPlugin *self)
 {
     self->renders_ = nullptr;
+    self->dartEglEnv = nullptr;
 }
 
 static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,

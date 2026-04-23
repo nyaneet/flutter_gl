@@ -5,7 +5,7 @@
 #include <GL/glew.h>
 #include <iostream>
 
-CustomRender::CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window)
+CustomRender::CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window, EglEnv *dartEglEnv_)
 {
     texture_registrar_ = texture_registrar;
     window_ = window;
@@ -13,7 +13,7 @@ CustomRender::CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar
     height = height_;
 
     eglEnv = new EglEnv();
-    dartEglEnv = new EglEnv();
+    dartEglEnv = dartEglEnv_;
 
     printf(".... customrender create  %d\n", width);
     myTexturep = fl_my_texturep_gl_new(width, height);
@@ -42,7 +42,6 @@ void CustomRender::initEGL()
     printf(".... initEGL\n");
 
     eglEnv->setupRender(window_);
-    dartEglEnv->setupRender(window_);
 
     eglEnv->makeCurrent();
 
@@ -66,7 +65,10 @@ void CustomRender::initEGL()
     renderWorker = RenderWorker();
     renderWorker.setup();
 
-    gdk_gl_context_clear_current();
+    if (dartEglEnv)
+    {
+        dartEglEnv->makeCurrent();
+    }
 }
 
 void CustomRender::initGL()
@@ -113,7 +115,10 @@ int CustomRender::updateTexture(GLuint sourceTexture)
 
     fl_texture_registrar_mark_texture_frame_available(texture_registrar_, texture_);
 
-    gdk_gl_context_clear_current();
+    if (dartEglEnv)
+    {
+        dartEglEnv->makeCurrent();
+    }
 
     return data;
 }
@@ -140,18 +145,15 @@ void CustomRender::dispose()
     // Dispose RenderWorker
     renderWorker.dispose();
 
-    gdk_gl_context_clear_current();
+    if (dartEglEnv)
+    {
+        dartEglEnv->makeCurrent();
+    }
 
     if (eglEnv)
     {
         eglEnv->dispose();
         delete eglEnv;
         eglEnv = nullptr;
-    }
-    if (dartEglEnv)
-    {
-        dartEglEnv->dispose();
-        delete dartEglEnv;
-        dartEglEnv = nullptr;
     }
 }
