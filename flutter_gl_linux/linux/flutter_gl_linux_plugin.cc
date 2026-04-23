@@ -76,19 +76,8 @@ static void flutter_gl_linux_plugin_handle_method_call(
             }
             else
             {
-                if (self->eglEnv == nullptr)
-                {
-                    self->eglEnv = new EglEnv();
-                    self->eglEnv->setupRender(self->window);
-                }
-                if (self->dartEglEnv == nullptr)
-                {
-                    self->dartEglEnv = new EglEnv();
-                    self->dartEglEnv->setupRender(self->window);
-                }
-
                 printf(".... initialize custom render");
-                CustomRender *customRender = new CustomRender(self->width, self->height, self->texture_registrar, self->window, self->eglEnv, self->dartEglEnv);
+                CustomRender *customRender = new CustomRender(self->width, self->height, self->texture_registrar, self->window);
                 int64_t textureID = customRender->texture_id();
                 self->renders_->insert({textureID, customRender});
 
@@ -129,7 +118,16 @@ static void flutter_gl_linux_plugin_handle_method_call(
     {
         printf(".... dispose in self\n");
         int64_t textureId = fl_value_get_int(fl_value_lookup_string(args, "textureId"));
-        self->renders_->at(textureId)->dispose();
+
+        auto it = self->renders_->find(textureId);
+        if (it != self->renders_->end())
+        {
+            CustomRender *render = it->second;
+            render->dispose();
+            delete render;
+            self->renders_->erase(it);
+        }
+
         // self->render->dispose();
         g_autoptr(FlValue) result = fl_value_new_null();
         response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
@@ -159,20 +157,6 @@ static void flutter_gl_linux_plugin_dispose(GObject *object)
         self->renders_ = nullptr;
     }
 
-    if (self->eglEnv != nullptr)
-    {
-        self->eglEnv->dispose();
-        delete self->eglEnv;
-        self->eglEnv = nullptr;
-    }
-
-    if (self->dartEglEnv != nullptr)
-    {
-        self->dartEglEnv->dispose();
-        delete self->dartEglEnv;
-        self->dartEglEnv = nullptr;
-    }
-
     G_OBJECT_CLASS(flutter_gl_linux_plugin_parent_class)->dispose(object);
 }
 
@@ -185,8 +169,6 @@ static void flutter_gl_linux_plugin_class_init(FlutterGlLinuxPluginClass *klass)
 static void flutter_gl_linux_plugin_init(FlutterGlLinuxPlugin *self)
 {
     self->renders_ = nullptr;
-    self->eglEnv = nullptr;
-    self->dartEglEnv = nullptr;
 }
 
 static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,

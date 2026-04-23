@@ -5,14 +5,16 @@
 #include <GL/glew.h>
 #include <iostream>
 
-CustomRender::CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window, EglEnv *eglEnv_, EglEnv *dartEglEnv_)
+CustomRender::CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window)
 {
     texture_registrar_ = texture_registrar;
     window_ = window;
     width = width_;
     height = height_;
-    eglEnv = eglEnv_;
-    dartEglEnv = dartEglEnv_;
+
+    eglEnv = new EglEnv();
+    dartEglEnv = new EglEnv();
+
     printf(".... customrender create  %d\n", width);
     myTexturep = fl_my_texturep_gl_new(width, height);
     texture_ = FL_TEXTURE(myTexturep);
@@ -38,6 +40,9 @@ FlValue *CustomRender::getEgls()
 void CustomRender::initEGL()
 {
     printf(".... initEGL\n");
+
+    eglEnv->setupRender(window_);
+    dartEglEnv->setupRender(window_);
 
     eglEnv->makeCurrent();
 
@@ -115,6 +120,11 @@ int CustomRender::updateTexture(GLuint sourceTexture)
 
 void CustomRender::dispose()
 {
+    if (eglEnv)
+    {
+        eglEnv->makeCurrent();
+    }
+
     // Free up textures data
     fl_texture_registrar_unregister_texture(texture_registrar_, texture_);
     g_object_unref(texture_);
@@ -129,7 +139,19 @@ void CustomRender::dispose()
     glDeleteRenderbuffers(1, &colorRenderBuffer);
     // Dispose RenderWorker
     renderWorker.dispose();
-    // Free up contexts
-    // eglEnv->dispose();
-    // dartEglEnv->dispose();
+
+    gdk_gl_context_clear_current();
+
+    if (eglEnv)
+    {
+        eglEnv->dispose();
+        delete eglEnv;
+        eglEnv = nullptr;
+    }
+    if (dartEglEnv)
+    {
+        dartEglEnv->dispose();
+        delete dartEglEnv;
+        dartEglEnv = nullptr;
+    }
 }
