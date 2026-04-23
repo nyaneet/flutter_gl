@@ -13,7 +13,7 @@ class CustomRender
 public:
   uint32_t width;
   uint32_t height;
-  CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window);
+  CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window, EglEnv *eglEnv_, EglEnv *dartEglEnv_);
   GdkWindow *window_; // m_hWnd;
   RenderWorker renderWorker;
   FlTextureRegistrar *texture_registrar_;
@@ -26,11 +26,12 @@ public:
   int64_t texture_id() const { return texture_id_; }
   int updateTexture(GLuint sourceTexture);
   //  EglEnv shareEglEnv;
-  static EglEnv *eglEnv;
-  static EglEnv *dartEglEnv;
+  EglEnv *eglEnv;
+  EglEnv *dartEglEnv;
   GLuint frameBuffer = 0;
   GLuint colorRenderBuffer = 0;
   GLuint texture = 0;
+
 private:
   int64_t texture_id_;
 };

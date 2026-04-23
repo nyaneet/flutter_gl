@@ -12,22 +12,26 @@
 */
 void EglEnv::setupRender(GdkWindow *window)
 {
+  if (window == nullptr)
+  {
+    printf(".... setup render error: window is null\n");
+    return;
+  }
+
   g_autoptr(GError) error = nullptr;
   context_ = gdk_window_create_gl_context(window, &error);
-  printf(".... eglenv setuprender \n"); //%ld\n",context_);
+  printf(".... eglenv setuprender \n");
   if (error != nullptr)
-    printf(".... setup render error\n");
+  {
+    printf(".... setup render error: %s\n", error->message);
+    return;
+  }
 
   if (!gdk_gl_context_realize(
           context_,
           &error))
   {
-    printf(".... setuprenderer realize false\n");
-  }
-  if (error != NULL)
-  {
-    printf(".... setuprenderer realize failed\n");
-    g_clear_error(&error);
+    printf(".... setuprenderer realize false: %s\n", error ? error->message : "unknown error");
   }
 }
 

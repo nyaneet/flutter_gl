@@ -15,7 +15,6 @@ static void mylog(const std::string &input)
     // cout << input << endl;
 }
 
-
 // Called when a method call is received from Flutter.
 static void flutter_gl_linux_plugin_handle_method_call(
     FlutterGlLinuxPlugin *self,
@@ -28,9 +27,10 @@ static void flutter_gl_linux_plugin_handle_method_call(
     const gchar *method = fl_method_call_get_name(method_call);
     // Get Dart arguments
     FlValue *args = fl_method_call_get_args(method_call);
-    
-    if (self->renders_ == nullptr) {
-        self-> renders_ = new std::map<int64_t, CustomRender*>();
+
+    if (self->renders_ == nullptr)
+    {
+        self->renders_ = new std::map<int64_t, CustomRender *>();
     }
 
     /********************************************/
@@ -41,8 +41,6 @@ static void flutter_gl_linux_plugin_handle_method_call(
         printf(".... initialize here\n");
 
         FlValue *options = fl_value_lookup_string(args, "options");
-        // int width =  0;//fl_value_lookup_string(options, "width");;
-        // int height = 0;//fl_value_lookup_int(options, "height");;
         FlValue *w = fl_value_lookup_string(options, "width");
         FlValue *h = fl_value_lookup_string(options, "height");
 
@@ -50,6 +48,7 @@ static void flutter_gl_linux_plugin_handle_method_call(
             self->width = fl_value_get_int(w);
         if (h != nullptr)
             self->height = fl_value_get_int(h);
+
         if (self->width == 0 || self->height == 0)
         {
             response = FL_METHOD_RESPONSE(fl_method_error_response_new(
@@ -60,20 +59,46 @@ static void flutter_gl_linux_plugin_handle_method_call(
         else
         {
             printf(".... initialize  %d %d\n", self->width, self->height);
-            self->window = gtk_widget_get_parent_window(GTK_WIDGET(self->fl_view));
-            printf(".... initialize custom render");
-            CustomRender *customRender = new CustomRender(self->width, self->height, self->texture_registrar, self->window); // context);
-            int64_t textureID = customRender->texture_id();
-            self->renders_->insert({textureID, customRender});
-            // self->render = customRender;
 
-            printf(".... textureid %ld\n", textureID);
+            self->window = gtk_widget_get_window(GTK_WIDGET(self->fl_view));
+            if (self->window == nullptr)
+            {
+                self->window = gtk_widget_get_parent_window(GTK_WIDGET(self->fl_view));
+            }
 
-            g_autoptr(FlValue) data = fl_value_new_map();
-            // check out https://gitlab.novinparva.com/medga/flutter/-/blob/3.16.9/examples/texture/linux/my_application.cc
-            fl_value_set(data, fl_value_new_string("textureId"), fl_value_new_int(textureID)); // fl_value_new_int(reinterpret_cast<int64_t>(self->texture)));
+            if (self->window == nullptr)
+            {
+                printf(".... initialize error: window is null, widget might not be realized\n");
+                response = FL_METHOD_RESPONSE(fl_method_error_response_new(
+                    "500",
+                    "Could not retrieve GdkWindow. Widget might not be realized yet.",
+                    nullptr));
+            }
+            else
+            {
+                if (self->eglEnv == nullptr)
+                {
+                    self->eglEnv = new EglEnv();
+                    self->eglEnv->setupRender(self->window);
+                }
+                if (self->dartEglEnv == nullptr)
+                {
+                    self->dartEglEnv = new EglEnv();
+                    self->dartEglEnv->setupRender(self->window);
+                }
 
-            response = FL_METHOD_RESPONSE(fl_method_success_response_new(data)); // result));
+                printf(".... initialize custom render");
+                CustomRender *customRender = new CustomRender(self->width, self->height, self->texture_registrar, self->window, self->eglEnv, self->dartEglEnv);
+                int64_t textureID = customRender->texture_id();
+                self->renders_->insert({textureID, customRender});
+
+                printf(".... textureid %ld\n", textureID);
+
+                g_autoptr(FlValue) data = fl_value_new_map();
+                fl_value_set(data, fl_value_new_string("textureId"), fl_value_new_int(textureID));
+
+                response = FL_METHOD_RESPONSE(fl_method_success_response_new(data));
+            }
         }
 
     } // end createSurface
@@ -120,7 +145,34 @@ static void flutter_gl_linux_plugin_handle_method_call(
 
 static void flutter_gl_linux_plugin_dispose(GObject *object)
 {
-    printf(".... displose\n");
+    printf(".... dispose plugin\n");
+    FlutterGlLinuxPlugin *self = FLUTTER_GL_LINUX_PLUGIN(object);
+
+    if (self->renders_ != nullptr)
+    {
+        for (auto const &[id, render] : *self->renders_)
+        {
+            render->dispose();
+            delete render;
+        }
+        delete self->renders_;
+        self->renders_ = nullptr;
+    }
+
+    if (self->eglEnv != nullptr)
+    {
+        self->eglEnv->dispose();
+        delete self->eglEnv;
+        self->eglEnv = nullptr;
+    }
+
+    if (self->dartEglEnv != nullptr)
+    {
+        self->dartEglEnv->dispose();
+        delete self->dartEglEnv;
+        self->dartEglEnv = nullptr;
+    }
+
     G_OBJECT_CLASS(flutter_gl_linux_plugin_parent_class)->dispose(object);
 }
 
@@ -130,7 +182,12 @@ static void flutter_gl_linux_plugin_class_init(FlutterGlLinuxPluginClass *klass)
     G_OBJECT_CLASS(klass)->dispose = flutter_gl_linux_plugin_dispose;
 }
 
-static void flutter_gl_linux_plugin_init(FlutterGlLinuxPlugin *self) {}
+static void flutter_gl_linux_plugin_init(FlutterGlLinuxPlugin *self)
+{
+    self->renders_ = nullptr;
+    self->eglEnv = nullptr;
+    self->dartEglEnv = nullptr;
+}
 
 static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,
                            gpointer user_data)
@@ -144,7 +201,7 @@ static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,
 
 void flutter_gl_linux_plugin_register_with_registrar(FlPluginRegistrar *registrar)
 {
-    printf(".... register with register\n");
+    printf(".... register with registrar\n");
     // mylog("with register");
     FlutterGlLinuxPlugin *plugin = FLUTTER_GL_LINUX_PLUGIN(
         g_object_new(flutter_gl_linux_plugin_get_type(), nullptr));
@@ -153,7 +210,7 @@ void flutter_gl_linux_plugin_register_with_registrar(FlPluginRegistrar *registra
     plugin->fl_view = fl_view;
     plugin->texture_registrar =
         fl_plugin_registrar_get_texture_registrar(registrar);
-    //  printf(".... registerar %ld\n",plugin->texture_registrar);
+    //  printf(".... registrar %ld\n",plugin->texture_registrar);
 
     g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
     g_autoptr(FlMethodChannel) channel =
@@ -166,16 +223,6 @@ void flutter_gl_linux_plugin_register_with_registrar(FlPluginRegistrar *registra
         method_call_cb,
         g_object_ref(plugin),
         g_object_unref);
-
-    // Initialize GL
-    glewExperimental = GL_TRUE;
-    GLenum err = glewInit();
-    if (GLEW_OK != err)
-    {
-        /* Problem: glewInit failed, something is seriously wrong. */
-        std::cout << "Error: " << glewGetErrorString(err) << std::endl;
-        return;
-    }
 
     g_object_unref(plugin);
 }

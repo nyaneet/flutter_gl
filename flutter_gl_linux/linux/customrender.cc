@@ -2,16 +2,17 @@
 #include "include/customrender.h"
 #include <flutter_linux/fl_pixel_buffer_texture.h>
 #include <flutter_linux/fl_texture_registrar.h>
+#include <GL/glew.h>
+#include <iostream>
 
-EglEnv* CustomRender::eglEnv = nullptr;
-EglEnv* CustomRender::dartEglEnv = nullptr;
-
-CustomRender::CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window)
+CustomRender::CustomRender(uint32_t width_, uint32_t height_, FlTextureRegistrar *texture_registrar, GdkWindow *window, EglEnv *eglEnv_, EglEnv *dartEglEnv_)
 {
     texture_registrar_ = texture_registrar;
     window_ = window;
     width = width_;
     height = height_;
+    eglEnv = eglEnv_;
+    dartEglEnv = dartEglEnv_;
     printf(".... customrender create  %d\n", width);
     myTexturep = fl_my_texturep_gl_new(width, height);
     texture_ = FL_TEXTURE(myTexturep);
@@ -37,20 +38,30 @@ FlValue *CustomRender::getEgls()
 void CustomRender::initEGL()
 {
     printf(".... initEGL\n");
-    if (eglEnv == nullptr) {
-        printf(".... initegl eglenv setup\n");
-        eglEnv = new EglEnv();
-        eglEnv->setupRender(window_);
-    }
-    if (dartEglEnv == nullptr) {
-        printf(".... initegl darteglenv setup\n");
-        dartEglEnv = new EglEnv();
-        dartEglEnv->setupRender(window_);
-    }
+
     eglEnv->makeCurrent();
+
+    static bool glewInitialized = false;
+    if (!glewInitialized)
+    {
+        glewExperimental = GL_TRUE;
+        GLenum err = glewInit();
+        if (GLEW_OK != err)
+        {
+            std::cerr << "Error: " << glewGetErrorString(err) << std::endl;
+        }
+        else
+        {
+            glewInitialized = true;
+            printf(".... GLEW initialized successfully\n");
+        }
+    }
+
     initGL();
     renderWorker = RenderWorker();
     renderWorker.setup();
+
+    gdk_gl_context_clear_current();
 }
 
 void CustomRender::initGL()
@@ -97,22 +108,25 @@ int CustomRender::updateTexture(GLuint sourceTexture)
 
     fl_texture_registrar_mark_texture_frame_available(texture_registrar_, texture_);
 
+    gdk_gl_context_clear_current();
+
     return data;
 }
 
-void CustomRender::dispose() {
+void CustomRender::dispose()
+{
     // Free up textures data
-    // myTexturep
-    free(myTexturep->buffer);
-    myTexturep = nullptr;
     fl_texture_registrar_unregister_texture(texture_registrar_, texture_);
-    texture_registrar_ = nullptr;
+    g_object_unref(texture_);
+
+    myTexturep = nullptr;
     texture_ = nullptr;
+    texture_registrar_ = nullptr;
     // texture
     glDeleteTextures(1, &texture);
     // Delete buffers
     glDeleteFramebuffers(1, &frameBuffer);
-    glDeleteRenderbuffers(1, &colorRenderBuffer); 
+    glDeleteRenderbuffers(1, &colorRenderBuffer);
     // Dispose RenderWorker
     renderWorker.dispose();
     // Free up contexts
