@@ -28,6 +28,9 @@ struct _FlMyTextureGL
   (G_TYPE_CHECK_INSTANCE_CAST((obj), flutter_gl_linux_plugin_get_type(), \
                               FlutterGlLinuxPlugin))
 
+#include "eglenv.h"
+#include <map>
+
 struct _FlutterGlLinuxPlugin
 {
   GObject parent_instance;
@@ -38,7 +41,8 @@ struct _FlutterGlLinuxPlugin
   uint32_t width = 0;          // glenn
   uint32_t height = 0;         // glenn
   // CustomRender *render = nullptr;
-  std::map<int64_t, CustomRender*> *renders_ = nullptr;
+  std::map<int64_t, CustomRender *> *renders_ = nullptr;
+  EglEnv *dartEglEnv = nullptr;
 };
 
 FlMyTextureGL *fl_my_texture_gl_new(uint32_t target,
